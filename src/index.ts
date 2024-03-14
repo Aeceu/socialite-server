@@ -13,7 +13,7 @@ import sharedPostRoute from "./routers/sharedpostRoute";
 
 dotenv.config();
 const app = express();
-const localUrl = "http://localhost:5173";
+const localUrl = "http://socialite-six.vercel.app";
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(express.json());
