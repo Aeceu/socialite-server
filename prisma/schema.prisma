@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  first_name  String
+  middle_name String?
+  last_name   String
+  email       String
+  age         Int?
+  phone       Int?
+  birthdate   DateTime?
+  createdAt   DateTime  @default(now())
+
+  password     String  
+  refreshToken String? 
+
+  profile_img     Profile_Image?
+  post            Post[]         @relation("OwnedPost")
+  sharedPost      SharedPost[]
+  friends         User[]         @relation("UserFriends")
+  friendsRelation User[]         @relation("UserFriends")
+  Comment         Comment[]
+}
+
+model Profile_Image {
+  id                 String @id @default(uuid())
+  profile_secure_url String
+  profile_image_id   String
+  cover_secure_url   String
+  cover_image_id     String
+
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id       String      @id @default(uuid())
+  title    String?
+  isLiked  Boolean     @default(false)
+  isSaved  Boolean     @default(false)
+  post_img Post_Image?
+  comments Comment[]
+  likes    Likes[]
+  userId   String?
+  user     User?       @relation("OwnedPost", fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime     @default(now())
+  SharedPost SharedPost[]
+}
+
+model SharedPost {
+  id        String    @id @default(uuid())
+  title     String?
+  isLiked   Boolean   @default(false)
+  isSaved   Boolean   @default(false)
+  postId    String?
+  comments  Comment[]
+  likes     Likes[]
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  User      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+}
+
+model Comment {
+  id           String      @id @default(uuid())
+  comment      String
+  postId       String?
+  post         Post?       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId       String?
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime    @default(now())
+  SharedPost   SharedPost? @relation(fields: [sharedPostId], references: [id], onDelete: Cascade)
+  sharedPostId String?
+}
+
+model Likes {
+  id           String     @id @default(uuid())
+  likersId     String
+  postId       String?
+  post         Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  sharedPostId String?
+  SharedPost   SharedPost? @relation(fields: [sharedPostId], references: [id], onDelete: Cascade)
+}
+
+model Post_Image {
+  id         String @id @default(uuid())
+  secure_url String
+  image_id   String
+
+  postId String @unique
+  post   Post?  @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
