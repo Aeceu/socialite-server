@@ -9,7 +9,7 @@ import postRoute from "./routers/postRoute";
 import likesRoute from "./routers/likesRoute";
 import friendRoute from "./routers/friendRoute";
 import commentRoute from "./routers/commentRoute";
-import sharedPostRoute from "./routers/sharedPostRoute";
+import sharedPostRoute from "./routers/sharedpostRoute";
 
 dotenv.config();
 const app = express();
@@ -37,6 +37,5 @@ const PORT = process.env.PORT as string;
 app.listen(PORT, () => {
   console.log(`Server is running on: http://localhost:${PORT}`);
 });
-
 
 export default app;
