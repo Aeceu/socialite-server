@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "cockroachdb"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL_1")
 }
 
 model User {
@@ -18,8 +18,8 @@ model User {
   birthdate   DateTime?
   createdAt   DateTime  @default(now())
 
-  password     String  
-  refreshToken String? 
+  password     String
+  refreshToken String?
 
   profile_img     Profile_Image?
   post            Post[]         @relation("OwnedPost")
